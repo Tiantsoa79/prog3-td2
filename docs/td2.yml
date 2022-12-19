@@ -56,7 +56,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/UpdateTeam'
+                $ref: '#/components/schemas/Team'
       responses:
         '200':
           description: List of teams
@@ -172,90 +172,6 @@ paths:
               schema:
                   $ref: '#/components/schemas/Player'
         '500':
-          description: Internal server error    
-  /sponsors:
-    get:
-      tags:
-        - Sponsors
-      summary: get all Sponsors
-      operationId: getSponsors
-      responses:
-        '200':
-          description: List of Sponsors
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Sponsor'
-        '500':
-          description: Internal server error
-    post:
-      tags:
-        - Sponsors
-      summary: create  Sponsors
-      operationId: createSponsors
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/CreateSponsor'
-      responses:
-        '200':
-          description: List of Sponsors
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Sponsor'
-        '500':
-          description: Internal server error 
-    put:
-      tags:
-        - Sponsors
-      summary: update  Sponsors
-      operationId: updateSponsors
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/UpdateSponsor'
-      responses:
-        '200':
-          description: List of Sponsors
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Sponsor'
-        '500':
-          description: Internal server error
-  /sponsors/{sponsor_id}:
-    delete:
-      tags:
-        - Sponsors
-      summary: delete Sponsor
-      operationId: deleteSponsor
-      parameters:
-        - in: path
-          name: sponsor_id
-          schema:
-            type: integer
-          required: true 
-      responses:
-        '200':
-          description: return the deleted Sponsor
-          content:
-            application/json:
-              schema:
-                  $ref: '#/components/schemas/Sponsor'
-        '500':
           description: Internal server error          
   /Match:
     get:
@@ -345,15 +261,21 @@ components:
    schemas:
     Team:
       type: object
-      allOf:
-        - $ref: '#/components/schemas/UpdateTeam'
-    UpdateTeam:
-      type: object
-      properties:  
+      properties:
         id: 
           type: integer
+        sponsors:
+          type: array
+          items: 
+             $ref : '#/components/schemas/Sponsor'
+        players:
+          type: array
+          items:
+             $ref: '#/components/schemas/Player'
+
       allOf:
         - $ref: '#/components/schemas/CreateTeam'
+        - $ref: '#/components/schemas/Sponsor'
     CreateTeam:
       type: object
       properties:  
@@ -377,43 +299,55 @@ components:
           type: string      
     Player :
       type: object
-      allOf:
-        - $ref: '#/components/schemas/UpdatePlayer'
-    UpdatePlayer:
-      type: object
       properties:  
         id: 
           type: integer
       allOf:
-        - $ref: '#/components/schemas/CreatePlayer'
+        - $ref: '#/components/schemas/ShowPlayer'
     CreatePlayer:
       type: object
       properties:  
-        name: 
-          type: string  
         number:
           type: integer
-        team:
-          type: string
-    Match :
+      allOf:
+        - $ref: '#/components/schemas/ShowPlayer'    
+    UpdatePlayer:
       type: object
       allOf:
-        - $ref: '#/components/schemas/UpdateMatch'
-    UpdateMatch:
+        - $ref: '#/components/schemas/Player'
+        - $ref: '#/components/schemas/CreatePlayer'
+    ShowPlayer:
+      type: object
+      properties:
+        name: 
+          type: string   
+    Match :
       type: object
       properties:  
         id: 
           type: integer
       allOf:
+        - $ref: '#/components/schemas/ShowMatch'
+    UpdateMatch:
+      type: object
+      allOf:
         - $ref: '#/components/schemas/CreateMatch'
+        - $ref: '#/components/schemas/Match'
     CreateMatch:
       type: object
-      properties:  
-        stadium: 
-          type: string  
+      properties:
+        stadium:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/ShowMatch'    
+    ShowMatch:
+      type: object
+      properties:   
         datetime:
           type: string
         team_one:
           type: string
         team_two:
-          type: string  
+          type: string
+
+           
